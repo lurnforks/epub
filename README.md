@@ -1,4 +1,6 @@
 # An EPub format reader for PHP (modernized!)
+This package is based on [justinrainbow/epub](https://github.com/justinrainbow/epub), with several changes since the original hadn't been updated in over 8 years. In particular, one of the upgrades is the ability to extract the HTML content of an epub file, rather than just metadata. It has also received improvements in developer experience. This is being used primarily for an internal project, so support and maintenance of the package will only go as far as the extent of our internal needs (but it does provide a more modern starting point for anyone wishing to fork).
+
 ## Installation
 Add a VCS repository to your composer.json file:
 
