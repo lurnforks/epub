@@ -20,6 +20,7 @@ class ZipFileLoader
 
         if (! $opfFile = (string) ($package->rootfiles->rootfile['full-path'] ?? '')) {
             $ns = $package->getNamespaces();
+
             foreach ($ns as $key => $value) {
                 $package->registerXPathNamespace($key, $value);
                 $items = $package->xpath('//' . $key . ':rootfile/@full-path');
@@ -29,19 +30,20 @@ class ZipFileLoader
 
         $data = $resource->get($opfFile);
 
-        // all files referenced in the OPF are relative to it's directory
+        // All files referenced in the OPF are relative to it's directory.
         if ('.' !== $dir = dirname($opfFile)) {
             $resource->setDirectory($dir);
         }
 
-        $opfResource = new OpfResource($data, $resource);
-        $package = $opfResource->bind();
+        $package = OpfResource::make($data, $resource);
 
         $package->opfDirectory = dirname($opfFile);
 
         if ($package->navigation->src->href) {
-            $ncx = $resource->get($package->navigation->src->href);
-            $ncxResource = new NcxResource($ncx);
+            $ncxResource = new NcxResource(
+                $resource->get($package->navigation->src->href)
+            );
+
             $package = $ncxResource->bind($package);
         }
 

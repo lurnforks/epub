@@ -2,20 +2,19 @@
 
 namespace Lurn\EPub\Resource;
 
-use SimpleXMLElement;
-use Lurn\EPub\NamespaceRegistry;
-use Lurn\EPub\Definition\Package;
-use Lurn\EPub\Definition\Metadata;
-use Lurn\EPub\Definition\MetadataItem;
-use Lurn\EPub\Definition\Manifest;
-use Lurn\EPub\Definition\ManifestItem;
-use Lurn\EPub\Definition\Spine;
-use Lurn\EPub\Definition\SpineItem;
 use Lurn\EPub\Definition\Guide;
 use Lurn\EPub\Definition\GuideItem;
+use Lurn\EPub\Definition\Manifest;
+use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Definition\Metadata;
+use Lurn\EPub\Definition\MetadataItem;
 use Lurn\EPub\Definition\Navigation;
+use Lurn\EPub\Definition\Package;
+use Lurn\EPub\Definition\Spine;
+use Lurn\EPub\Definition\SpineItem;
 use Lurn\EPub\Exception\InvalidArgumentException;
-
+use Lurn\EPub\NamespaceRegistry;
+use SimpleXMLElement;
 
 class OpfResource
 {
@@ -35,22 +34,28 @@ class OpfResource
      * Constructor
      *
      * @param \SimpleXMLElement|string $data
-     * @param ZipFileResource $resource
-     * @throws InvalidArgumentException
+     * @param \Lurn\EPub\Resource\ZipFileResource $resource
+     * @throws \Lurn\EPub\Exception\InvalidArgumentException
      */
     public function __construct($data, ZipFileResource $resource = null)
     {
-        if ($data instanceof SimpleXMLElement) {
-            $this->xml = $data;
-        } else if (is_string($data)) {
-            $this->xml = new SimpleXMLElement($data);
-        } else {
-            throw new InvalidArgumentException(sprintf('Invalid data type for OpfResource'));
+        if (! is_string($data) && ! $data instanceof SimpleEXMLElement) {
+            throw new InvalidArgumentException('Invalid data type for OpfResource');
         }
+
+        $this->xml = is_string($data) ? new SimpleXMLElement($data) : $data;
 
         $this->resource = $resource;
 
         $this->namespaces = $this->xml->getNamespaces(true);
+    }
+
+    public static function make(
+        $data,
+        ?ZipFileResource $resource = null,
+        ?Package $package = null
+    ) {
+        return (new static($data, $resource))->bind($package);
     }
 
     /**
@@ -60,12 +65,11 @@ class OpfResource
      *
      * @return Package
      */
-    public function bind(Package $package = null)
+    public function bind(?Package $package = null)
     {
-        $package = $package ?: new Package();
-        $xml     = $this->xml;
+        $package ??= new Package();
+        $xml = $this->xml;
 
-        // Epub version:
         $package->version = (string) $xml['version'];
 
         $this->processMetadataElement($xml->metadata, $package->metadata);
@@ -108,18 +112,22 @@ class OpfResource
         }
     }
 
-    protected function processSpineElement(SimpleXMLElement $xml, Spine $spine, Manifest $manifest, Navigation $navigation)
-    {
+    protected function processSpineElement(
+        SimpleXMLElement $xml,
+        Spine $spine,
+        Manifest $manifest,
+        Navigation $navigation
+    ) {
         $position = 1;
         foreach ($xml->itemref as $child) {
             $id = (string) $child['idref'];
             $manifestItem = $manifest->get($id);
-            if (!$linear = $child['linear']) {
+
+            if (! $linear = $child['linear']) {
                 $linear = 'yes';
             }
 
             $item = new SpineItem();
-
 
             $item->id     = $id;
             $item->type   = $manifestItem->type;
@@ -134,7 +142,7 @@ class OpfResource
             $position++;
         }
 
-        $ncxId = ($xml['toc']) ? (string) $xml['toc'] : 'ncx';
+        $ncxId = $xml['toc'] ? (string) $xml['toc'] : 'ncx';
 
         if ($manifest->has($ncxId)) {
             $navigation->src = $manifest->get($ncxId);
@@ -179,7 +187,8 @@ class OpfResource
      */
     protected function getXmlAttributes($xml)
     {
-        $attributes = array();
+        $attributes = [];
+
         foreach ($this->namespaces as $prefix => $namespace) {
             foreach ($xml->attributes($namespace) as $attr => $value) {
                 if ($prefix !== "") {
@@ -196,11 +205,7 @@ class OpfResource
     protected function addContentGetter($item)
     {
         if (null !== $this->resource) {
-            $resource = $this->resource;
-
-            $item->setContent(function () use ($item, $resource) {
-                return $resource->get($item->href);
-            });
+            $item->setContent(fn () => $this->resource->get($item->href));
         }
     }
 }
