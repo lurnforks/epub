@@ -1,6 +1,6 @@
 <?php
 
-namespace ePub\Definition;
+namespace Lurn\EPub\Definition;
 
 class GuideItem implements ItemInterface
 {

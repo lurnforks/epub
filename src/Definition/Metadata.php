@@ -1,10 +1,10 @@
 <?php
 
-namespace ePub\Definition;
+namespace Lurn\EPub\Definition;
 
-use ePub\Definition\MetadataItem;
-use ePub\Exception\InvalidArgumentException;
-use ePub\Exception\OutOfBoundsException;
+use Lurn\EPub\Definition\MetadataItem;
+use Lurn\EPub\Exception\InvalidArgumentException;
+use Lurn\EPub\Exception\OutOfBoundsException;
 
 class Metadata extends Collection
 {

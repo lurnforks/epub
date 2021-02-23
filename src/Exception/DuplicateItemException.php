@@ -1,6 +1,6 @@
 <?php
 
-namespace ePub\Exception;
+namespace Lurn\EPub\Exception;
 
 class DuplicateItemException extends \DomainException
 {

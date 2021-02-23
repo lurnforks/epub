@@ -1,13 +1,13 @@
 <?php
 
-namespace ePub\Loader;
+namespace Lurn\EPub\Loader;
 
-use ePub\Resource\ZipFileResource;
-use ePub\Resource\OpfResource;
-use ePub\Resource\NcxResource;
-use ePub\Definition\Manifest;
-use ePub\Definition\ManifestItem;
-use ePub\Definition\Metadata;
+use Lurn\EPub\Resource\ZipFileResource;
+use Lurn\EPub\Resource\OpfResource;
+use Lurn\EPub\Resource\NcxResource;
+use Lurn\EPub\Definition\Manifest;
+use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Definition\Metadata;
 
 class ZipFileLoader
 {

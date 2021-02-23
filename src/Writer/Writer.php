@@ -1,10 +1,10 @@
 <?php
 
-namespace ePub\Writer;
+namespace Lurn\EPub\Writer;
 
-use ePub\Definition\Package;
-use ePub\Exception\DuplicateItemException;
-use ePub\Exception\InvalidArgumentException;
+use Lurn\EPub\Definition\Package;
+use Lurn\EPub\Exception\DuplicateItemException;
+use Lurn\EPub\Exception\InvalidArgumentException;
 
 class Writer
 {

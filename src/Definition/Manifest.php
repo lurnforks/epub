@@ -1,11 +1,11 @@
 <?php
 
-namespace ePub\Definition;
+namespace Lurn\EPub\Definition;
 
-use ePub\Definition\Metadata;
-use ePub\Definition\ManifestItem;
-use ePub\Exception\DuplicateItemException;
-use ePub\Exception\InvalidArgumentException;
+use Lurn\EPub\Definition\Metadata;
+use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Exception\DuplicateItemException;
+use Lurn\EPub\Exception\InvalidArgumentException;
 
 class Manifest extends Collection
 {

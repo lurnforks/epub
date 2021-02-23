@@ -1,8 +1,8 @@
 <?php
 
-namespace ePub;
+namespace Lurn\EPub;
 
-use ePub\Loader\ZipFileLoader;
+use Lurn\EPub\Loader\ZipFileLoader;
 
 class Reader
 {

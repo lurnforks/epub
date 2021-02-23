@@ -1,6 +1,6 @@
 <?php
 
-namespace ePub\Resource;
+namespace Lurn\EPub\Resource;
 
 use ZipArchive;
 

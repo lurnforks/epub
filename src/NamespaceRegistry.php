@@ -1,6 +1,6 @@
 <?php
 
-namespace ePub;
+namespace Lurn\EPub;
 
 class NamespaceRegistry
 {

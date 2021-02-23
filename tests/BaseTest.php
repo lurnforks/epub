@@ -2,9 +2,11 @@
 
 namespace Lurn\EPub\Tests;
 
+use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Reader;
+use Orchestra\Testbench\TestCase;
 
-abstract class BaseTest extends \PHPUnit_Framework_TestCase
+abstract class BaseTest extends TestCase
 {
     /**
      * Locate a test fixture file
@@ -30,14 +32,7 @@ abstract class BaseTest extends \PHPUnit_Framework_TestCase
         return file_get_contents($this->getFixturePath($name));
     }
 
-    /**
-     * Locates a fixture and returns the Package
-     *
-     * @param string $name Partial path to fixture
-     *
-     * @return Package
-     */
-    public function getFixtureEpub($name)
+    public function getFixtureEpub(string $name): Package
     {
         $fixture = $this->getFixturePath($name);
 

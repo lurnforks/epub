@@ -1,18 +1,18 @@
 <?php
 
-namespace ePub\Resource\Dumper;
+namespace Lurn\EPub\Resource\Dumper;
 
-use ePub\Definition\Guide;
-use ePub\Definition\GuideItem;
-use ePub\Definition\Metadata;
-use ePub\Definition\Manifest;
-use ePub\Definition\ManifestItem;
-use ePub\Definition\Package;
-use ePub\Definition\Spine;
-use ePub\Exception\DuplicateItemException;
-use ePub\Exception\InvalidArgumentException;
-use ePub\Resource\OpfResource;
-use ePub\NamespaceRegistry;
+use Lurn\EPub\Definition\Guide;
+use Lurn\EPub\Definition\GuideItem;
+use Lurn\EPub\Definition\Metadata;
+use Lurn\EPub\Definition\Manifest;
+use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Definition\Package;
+use Lurn\EPub\Definition\Spine;
+use Lurn\EPub\Exception\DuplicateItemException;
+use Lurn\EPub\Exception\InvalidArgumentException;
+use Lurn\EPub\Resource\OpfResource;
+use Lurn\EPub\NamespaceRegistry;
 
 class OpfResourceDumper
 {

@@ -1,23 +1,23 @@
 <?php
 
 
-namespace ePub\Definition;
+namespace Lurn\EPub\Definition;
 
-use ePub\Definition\Chapter;
+use Lurn\EPub\Definition\Chapter;
 
 
 class Navigation
 {
     public $src;
-    
+
     /**
      * Array of Chapters
      *
      * @var array
      */
     public $chapters;
-    
-    
+
+
     public function __construct()
     {
         $this->src = new ManifestItem();

@@ -1,8 +1,8 @@
 <?php
 
-namespace ePub\Definition;
+namespace Lurn\EPub\Definition;
 
-use ePub\Definition\ItemInterface;
+use Lurn\EPub\Definition\ItemInterface;
 
 class ManifestItem implements ItemInterface
 {

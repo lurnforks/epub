@@ -24,7 +24,7 @@ composer require justinrainbow/epub
 ```php
 <?php
 
-use Lurn\EPub\Reader;
+namespace Lurn\EPub\Reader;
 
 $epub = Reader::load('book.epub');
 

@@ -1,20 +1,20 @@
 <?php
 
-namespace ePub\Resource;
+namespace Lurn\EPub\Resource;
 
 use SimpleXMLElement;
-use ePub\NamespaceRegistry;
-use ePub\Definition\Package;
-use ePub\Definition\Metadata;
-use ePub\Definition\MetadataItem;
-use ePub\Definition\Manifest;
-use ePub\Definition\ManifestItem;
-use ePub\Definition\Spine;
-use ePub\Definition\SpineItem;
-use ePub\Definition\Guide;
-use ePub\Definition\GuideItem;
-use ePub\Definition\Navigation;
-use ePub\Exception\InvalidArgumentException;
+use Lurn\EPub\NamespaceRegistry;
+use Lurn\EPub\Definition\Package;
+use Lurn\EPub\Definition\Metadata;
+use Lurn\EPub\Definition\MetadataItem;
+use Lurn\EPub\Definition\Manifest;
+use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Definition\Spine;
+use Lurn\EPub\Definition\SpineItem;
+use Lurn\EPub\Definition\Guide;
+use Lurn\EPub\Definition\GuideItem;
+use Lurn\EPub\Definition\Navigation;
+use Lurn\EPub\Exception\InvalidArgumentException;
 
 
 class OpfResource
