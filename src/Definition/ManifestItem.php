@@ -14,7 +14,7 @@ class ManifestItem implements ItemInterface
 
     public $fallback;
 
-    private $content;
+    protected $content;
 
     public function getIdentifier()
     {

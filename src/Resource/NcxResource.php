@@ -14,14 +14,14 @@ class NcxResource
     /**
      * @var \SimpleXMLElement
      */
-    private $xml;
+    protected $xml;
 
     /**
      * Array of XML namespaces found in document
      *
      * @var array
      */
-    private $namespaces;
+    protected $namespaces;
 
     /**
      * Constructor
@@ -62,7 +62,7 @@ class NcxResource
     }
 
 
-    private function consumeNavMap($navMap, &$chapters)
+    protected function consumeNavMap($navMap, &$chapters)
     {
         foreach ($navMap->navPoint as $navPoint) {
             $chapters[] = $this->consumeNavPoint($navPoint);
@@ -70,7 +70,7 @@ class NcxResource
     }
 
 
-    private function consumeNavPoint($navPoint)
+    protected function consumeNavPoint($navPoint)
     {
         $chapter = new Chapter((string) $navPoint->navLabel->text, $navPoint['playOrder'], (string) $navPoint->content['src']);
 

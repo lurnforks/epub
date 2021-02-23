@@ -2,9 +2,7 @@
 
 namespace Lurn\EPub\Loader;
 
-use Lurn\EPub\Definition\Manifest;
-use Lurn\EPub\Definition\ManifestItem;
-use Lurn\EPub\Definition\Metadata;
+use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Resource\NcxResource;
 use Lurn\EPub\Resource\OpfResource;
 use Lurn\EPub\Resource\ZipFileResource;
@@ -13,12 +11,8 @@ class ZipFileLoader
 {
     /**
      * Reads in a ePub file and builds the Package definition
-     *
-     * @param string $file
-     *
-     * @return \ePub\Definition\Package
      */
-    public function load($file)
+    public function load(string $file): Package
     {
         $resource = new ZipFileResource($file);
 

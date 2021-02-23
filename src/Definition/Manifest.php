@@ -2,8 +2,8 @@
 
 namespace Lurn\EPub\Definition;
 
-use Lurn\EPub\Definition\Metadata;
 use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Definition\Metadata;
 use Lurn\EPub\Exception\DuplicateItemException;
 use Lurn\EPub\Exception\InvalidArgumentException;
 
@@ -12,16 +12,16 @@ class Manifest extends Collection
     /**
      * @var array
      */
-    private $resources = array();
+    protected $resources = [];
 
     /**
      * {@inheritDoc}
      */
     public function add(ItemInterface $item)
     {
-        if (!($item instanceof ManifestItem)) {
+        if (! ($item instanceof ManifestItem)) {
             throw new InvalidArgumentException(sprintf(
-                'Expected instance of ePub\Definition\ManifestItem, got %s',
+                'Expected instance of Lurn\EPub\Definition\ManifestItem, got %s',
                 get_class($item)
             ));
         }

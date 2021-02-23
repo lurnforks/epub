@@ -10,7 +10,7 @@ class GuideItem implements ItemInterface
 
     public $title;
 
-    private $content;
+    protected $content;
 
     public function getIdentifier()
     {

@@ -27,6 +27,7 @@ class WriterTest extends TestCase
         $manifest   = $epub->getManifest();
         $dedication = $manifest->get('dedication');
         $expected   = $this->getFixtureContents('the-velveteen-rabbit/' . $dedication->href);
+
         $this->assertEquals($expected, $dedication->getContent());
     }
 }

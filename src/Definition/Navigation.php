@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Lurn\EPub\Definition;
 
 use Lurn\EPub\Definition\Chapter;
-
 
 class Navigation
 {
@@ -17,10 +15,9 @@ class Navigation
      */
     public $chapters;
 
-
     public function __construct()
     {
         $this->src = new ManifestItem();
-        $this->chapters = array();
+        $this->chapters = [];
     }
 }

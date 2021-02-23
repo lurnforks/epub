@@ -10,18 +10,15 @@ class Metadata extends Collection
 {
     public function add(ItemInterface $item)
     {
-        if (!($item instanceof MetadataItem)) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected instance of ePub\Definition\MetadataItem, got %s',
-                get_class($item)
-            ));
+        if (! $item instanceof MetadataItem) {
+            throw new InvalidArgumentException(
+                'Expected instance of ' . MetadataItem::class . ', got ' . get_class($item)
+            );
         }
 
         $id = $item->getIdentifier();
 
-        if (!isset($this->items[$id])) {
-            $this->items[$id] = array();
-        }
+        $this->items[$id] ??= [];
 
         $this->items[$id][] = $item;
     }
@@ -30,12 +27,12 @@ class Metadata extends Collection
     {
         $item = $this->get($id);
 
-        if (isset($item[0]) && $item[0] instanceof MetadataItem) {
-            return $item[0]->value;
+        if (! isset($item[0]) || ! $item[0] instanceof MetadataItem) {
+            throw new OutOfBoundsException(
+                'No value could be found for item: ' . json_encode($id)
+            );
         }
 
-        throw new OutOfBoundsException(
-            "No value could be found for item: " . json_encode($id)
-        );
+        return $item[0]->value;
     }
 }

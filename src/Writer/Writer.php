@@ -8,7 +8,7 @@ use Lurn\EPub\Exception\InvalidArgumentException;
 
 class Writer
 {
-	private $package;
+	protected $package;
 
 	public function __construct(Package $package)
 	{

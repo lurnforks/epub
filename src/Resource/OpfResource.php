@@ -22,14 +22,14 @@ class OpfResource
     /**
      * @var \SimpleXMLElement
      */
-    private $xml;
+    protected $xml;
 
     /**
      * Array of XML namespaces found in document
      *
      * @var array
      */
-    private $namespaces;
+    protected $namespaces;
 
     /**
      * Constructor
@@ -79,7 +79,7 @@ class OpfResource
         return $package;
     }
 
-    private function processMetadataElement(SimpleXMLElement $xml, Metadata $metadata)
+    protected function processMetadataElement(SimpleXMLElement $xml, Metadata $metadata)
     {
         foreach ($xml->children(NamespaceRegistry::NAMESPACE_DC) as $child) {
             $item = new MetadataItem();
@@ -92,7 +92,7 @@ class OpfResource
         }
     }
 
-    private function processManifestElement(SimpleXmlElement $xml, Manifest $manifest)
+    protected function processManifestElement(SimpleXmlElement $xml, Manifest $manifest)
     {
         foreach ($xml->item as $child) {
             $item = new ManifestItem();
@@ -108,7 +108,7 @@ class OpfResource
         }
     }
 
-    private function processSpineElement(SimpleXMLElement $xml, Spine $spine, Manifest $manifest, Navigation $navigation)
+    protected function processSpineElement(SimpleXMLElement $xml, Spine $spine, Manifest $manifest, Navigation $navigation)
     {
         $position = 1;
         foreach ($xml->itemref as $child) {
@@ -141,7 +141,7 @@ class OpfResource
         }
     }
 
-    private function processGuideElement(SimpleXMLElement $xml, Guide $guide)
+    protected function processGuideElement(SimpleXMLElement $xml, Guide $guide)
     {
         foreach ($xml->reference as $child) {
             $item = new GuideItem();
@@ -177,7 +177,7 @@ class OpfResource
      *
      * @return array
      */
-    private function getXmlAttributes($xml)
+    protected function getXmlAttributes($xml)
     {
         $attributes = array();
         foreach ($this->namespaces as $prefix => $namespace) {
@@ -193,7 +193,7 @@ class OpfResource
         return $attributes;
     }
 
-    private function addContentGetter($item)
+    protected function addContentGetter($item)
     {
         if (null !== $this->resource) {
             $resource = $this->resource;

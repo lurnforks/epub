@@ -14,7 +14,7 @@ class SpineItem implements ItemInterface
 
     public $type;
 
-    private $content;
+    protected $content;
 
     public function getIdentifier()
     {

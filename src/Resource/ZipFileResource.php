@@ -6,9 +6,9 @@ use ZipArchive;
 
 class ZipFileResource
 {
-    private $zipFile;
+    protected $zipFile;
 
-    private $cwd;
+    protected $cwd;
 
     public function __construct($file)
     {

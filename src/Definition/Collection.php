@@ -10,7 +10,7 @@ abstract class Collection
 
     public function __construct()
     {
-        $this->items = array();
+        $this->items = [];
     }
 
     public function add(ItemInterface $item)

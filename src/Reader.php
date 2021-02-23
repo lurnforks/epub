@@ -6,7 +6,7 @@ use Lurn\EPub\Loader\ZipFileLoader;
 
 class Reader
 {
-    private $loader;
+    protected $loader;
 
     public function __construct()
     {
