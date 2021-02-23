@@ -2,36 +2,31 @@
 
 namespace Lurn\EPub\Tests\Writer;
 
-use Lurn\EPub\Tests\BaseTest;
+use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Reader;
 use Lurn\EPub\Resource\Dumper\OpfResourceDumper;
+use Lurn\EPub\Tests\TestCase;
 
-class WriterTest extends BaseTest
+class WriterTest extends TestCase
 {
-    public function testLoadingEpubFile()
+    /** @test */
+    public function loadingEpubFile()
     {
-        $fixture = $this->getFixturePath('the_velveteen_rabbit.epub');
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
-        $reader = new Reader();
-        $epub = $reader->load($fixture);
-
-        $this->assertTrue($epub instanceof \ePub\Definition\Package);
+        $this->assertInstanceOf(Package::class, $epub);
 
         $dumper = new OpfResourceDumper($epub);
-        // This looks like a WIP, let's comment it out for now:
-        // echo $dumper->dump();
     }
 
-    public function testReadingManifestItemContent()
+    /** @test */
+    public function readingManifestItemContent()
     {
-        $fixture = $this->getFixturePath('the_velveteen_rabbit.epub');
-
-        $reader = new Reader();
-        $epub   = $reader->load($fixture);
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
         $manifest   = $epub->getManifest();
         $dedication = $manifest->get('dedication');
-        $expected   = $this->getFixture('the-velveteen-rabbit/' . $dedication->href);
+        $expected   = $this->getFixtureContents('the-velveteen-rabbit/' . $dedication->href);
         $this->assertEquals($expected, $dedication->getContent());
     }
 }

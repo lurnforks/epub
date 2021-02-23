@@ -12,7 +12,7 @@ class ZipFileResource
 
     public function __construct($file)
     {
-        $this->zipFile = new \ZipArchive();
+        $this->zipFile = new ZipArchive();
 
         $this->zipFile->open($file);
     }
@@ -38,9 +38,9 @@ class ZipFileResource
 
     public function all()
     {
-        $result = array();
+        $result = [];
 
-        for ($i = 0; $i < $this->zipFile->numFiles; $i++){
+        for ($i = 0; $i < $this->zipFile->numFiles; $i++) {
             $item = $this->zipFile->statIndex($i);
 
             $result[] = $item['name'];

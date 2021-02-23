@@ -2,12 +2,12 @@
 
 namespace Lurn\EPub\Loader;
 
-use Lurn\EPub\Resource\ZipFileResource;
-use Lurn\EPub\Resource\OpfResource;
-use Lurn\EPub\Resource\NcxResource;
 use Lurn\EPub\Definition\Manifest;
 use Lurn\EPub\Definition\ManifestItem;
 use Lurn\EPub\Definition\Metadata;
+use Lurn\EPub\Resource\NcxResource;
+use Lurn\EPub\Resource\OpfResource;
+use Lurn\EPub\Resource\ZipFileResource;
 
 class ZipFileLoader
 {
@@ -24,11 +24,11 @@ class ZipFileLoader
 
         $package = $resource->getXML('META-INF/container.xml');
 
-        if (!$opfFile = (string) $package->rootfiles->rootfile['full-path']) {
+        if (! $opfFile = (string) ($package->rootfiles->rootfile['full-path'] ?? '')) {
             $ns = $package->getNamespaces();
             foreach ($ns as $key => $value) {
                 $package->registerXPathNamespace($key, $value);
-                $items = $package->xpath('//'. $key .':rootfile/@full-path');
+                $items = $package->xpath('//' . $key . ':rootfile/@full-path');
                 $opfFile = (string) $items[0]['full-path'];
             }
         }

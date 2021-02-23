@@ -2,55 +2,56 @@
 
 namespace Lurn\EPub\Tests;
 
-use Lurn\EPub\Tests\BaseTest;
+use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Reader;
+use Lurn\EPub\Tests\TestCase;
 
-class ReaderTest extends BaseTest
+class ReaderTest extends TestCase
 {
-    public function testBasicInstantiation()
+    /** @test */
+    public function readingEpubFile()
     {
-        $this->assertTrue(new Reader instanceof Reader);
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
+
+        $this->assertInstanceOf(Package::class, $epub);
     }
 
-    public function testLoadingEpubFile()
+    /** @test */
+    public function readingManifestItemContent()
     {
-        $epub = $this->getFixtureEpub('the_velveteen_rabbit.epub');
-
-        $this->assertTrue($epub instanceof \ePub\Definition\Package);
-    }
-
-    public function testReadingManifestItemContent()
-    {
-        $epub = $this->getFixtureEpub('the_velveteen_rabbit.epub');
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
         $manifest   = $epub->getManifest();
         $dedication = $manifest->get('dedication');
-        $expected   = $this->getFixture('the-velveteen-rabbit/' . $dedication->href);
+        $expected   = $this->getFixtureContents('the-velveteen-rabbit/' . $dedication->href);
         $this->assertEquals($expected, $dedication->getContent());
     }
 
-    public function testReadingEpubVersion()
+    /** @test */
+    public function readingEpubVersion()
     {
-        $epub = $this->getFixtureEpub('epub3_nested_nav.epub');
+        $epub = Reader::make($this->fixturePath('epub3_nested_nav.epub'));
         $this->assertEquals('3.0', $epub->version);
 
-        $epub = $this->getFixtureEpub('the_velveteen_rabbit.epub');
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
         $this->assertEquals('2.0', $epub->version);
     }
 
-    public function testReadingOpfDirectory()
+    /** @test */
+    public function readingOpfDirectory()
     {
-        $epub = $this->getFixtureEpub('the_velveteen_rabbit.epub');
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
         $this->assertEquals('.', $epub->opfDirectory);
 
-        $epub = $this->getFixtureEpub('epub3_nested_nav.epub');
+        $epub = Reader::make($this->fixturePath('epub3_nested_nav.epub'));
         $this->assertEquals('EPUB', $epub->opfDirectory);
     }
 
-    public function testLoadingNamespacedContainer()
+    /** @test */
+    public function loadingNamespacedContainer()
     {
-        $epub = $this->getFixtureEpub('pg19132.epub');
+        $epub = Reader::make($this->fixturePath('pg19132.epub'));
 
-        $this->assertTrue($epub instanceof \ePub\Definition\Package);
+        $this->assertInstanceOf(Package::class, $epub);
     }
 }

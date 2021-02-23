@@ -2,16 +2,17 @@
 
 namespace Lurn\EPub\Tests\Resource;
 
-use Lurn\EPub\Tests\BaseTest;
+use Lurn\EPub\Reader;
+use Lurn\EPub\Tests\TestCase;
 
-class NcxResourceTest extends BaseTest
+class NcxResourceTest extends TestCase
 {
-    public function testExtractingChaptersFromNcx()
+    /** @test */
+    public function extractingChapterMetadataFromNcx()
     {
-        $epub = $this->getFixtureEpub('the_velveteen_rabbit.epub');
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
         $this->assertCount(5, $epub->navigation->chapters);
         $this->assertEquals("List of Illustrations", $epub->navigation->chapters[2]->title);
     }
-
 }
