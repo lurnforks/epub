@@ -1,27 +1,17 @@
 <?php
 
-
 namespace Lurn\EPub\Resource;
 
-use SimpleXMLElement;
-use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Definition\Chapter;
+use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Exception\InvalidArgumentException;
-
+use SimpleXMLElement;
 
 class NcxResource
 {
-    /**
-     * @var \SimpleXMLElement
-     */
-    protected $xml;
+    protected SimpleXMLElement $xml;
 
-    /**
-     * Array of XML namespaces found in document
-     *
-     * @var array
-     */
-    protected $namespaces;
+    protected array $namespaces;
 
     /**
      * Constructor
@@ -31,28 +21,23 @@ class NcxResource
      */
     public function __construct($data)
     {
-        if ($data instanceof SimpleXMLElement) {
-            $this->xml = $data;
-        } else if (is_string($data)) {
-            $this->xml = new SimpleXMLElement($data);
-        } else {
-            throw new InvalidArgumentException(sprintf('Invalid data type for NcxResource'));
+        if (! is_string($data) && ! $data instanceof SimpleEXMLElement) {
+            throw new InvalidArgumentException('Invalid data type for OpfResource');
         }
+
+        $this->xml = is_string($data) ? new SimpleXMLElement($data) : $data;
 
         $this->namespaces = $this->xml->getNamespaces(true);
     }
 
-
-    /**
-     * Processes the XML data and puts the data into a Package object
-     *
-     * @param Package $package
-     *
-     * @return Package
-     */
-    public function bind(Package $package = null)
+    public static function make($data, ?Package $package = null)
     {
-        $package = $package ?: new Package();
+        return (new static($data))->bind($package);
+    }
+
+    public function bind(?Package $package = null): Package
+    {
+        $package ??= new Package();
 
         $navMap = $this->xml->navMap;
 
@@ -61,14 +46,12 @@ class NcxResource
         return $package;
     }
 
-
     protected function consumeNavMap($navMap, &$chapters)
     {
         foreach ($navMap->navPoint as $navPoint) {
             $chapters[] = $this->consumeNavPoint($navPoint);
         }
     }
-
 
     protected function consumeNavPoint($navPoint)
     {
@@ -80,5 +63,4 @@ class NcxResource
 
         return $chapter;
     }
-
 }

@@ -9,9 +9,6 @@ use Lurn\EPub\Resource\ZipFileResource;
 
 class ZipFileLoader
 {
-    /**
-     * Reads in a ePub file and builds the Package definition
-     */
     public function load(string $file): Package
     {
         $resource = new ZipFileResource($file);
@@ -19,11 +16,9 @@ class ZipFileLoader
         $package = $resource->getXML('META-INF/container.xml');
 
         if (! $opfFile = (string) ($package->rootfiles->rootfile['full-path'] ?? '')) {
-            $ns = $package->getNamespaces();
-
-            foreach ($ns as $key => $value) {
+            foreach ($package->getNamespaces() as $key => $value) {
                 $package->registerXPathNamespace($key, $value);
-                $items = $package->xpath('//' . $key . ':rootfile/@full-path');
+                $items = $package->xpath("//{$key}:rootfile/@full-path");
                 $opfFile = (string) $items[0]['full-path'];
             }
         }
@@ -40,11 +35,10 @@ class ZipFileLoader
         $package->opfDirectory = dirname($opfFile);
 
         if ($package->navigation->src->href) {
-            $ncxResource = new NcxResource(
-                $resource->get($package->navigation->src->href)
+            $package = NcxResource::make(
+                $resource->get($package->navigation->src->href),
+                $package,
             );
-
-            $package = $ncxResource->bind($package);
         }
 
         return $package;

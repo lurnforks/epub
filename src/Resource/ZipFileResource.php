@@ -2,50 +2,38 @@
 
 namespace Lurn\EPub\Resource;
 
+use Illuminate\Support\Collection;
 use ZipArchive;
 
 class ZipFileResource
 {
-    protected $zipFile;
+    protected $archive;
 
-    protected $cwd;
+    protected $currentDir;
 
     public function __construct($file)
     {
-        $this->zipFile = new ZipArchive();
+        $this->archive = new ZipArchive();
 
-        $this->zipFile->open($file);
+        $this->archive->open($file);
     }
 
     public function setDirectory($dir)
     {
-        $this->cwd = $dir;
+        $this->currentDir = $dir;
     }
 
     public function get($name)
     {
-        if (null !== $this->cwd) {
-            $name = $this->cwd . '/' . $name;
+        if (null !== $this->currentDir) {
+            $name = $this->currentDir . '/' . $name;
         }
 
-        return $this->zipFile->getFromName($name);
+        return $this->archive->getFromName($name);
     }
 
     public function getXML($name)
     {
         return simplexml_load_string($this->get($name));
-    }
-
-    public function all()
-    {
-        $result = [];
-
-        for ($i = 0; $i < $this->zipFile->numFiles; $i++) {
-            $item = $this->zipFile->statIndex($i);
-
-            $result[] = $item['name'];
-        }
-
-        return $result;
     }
 }

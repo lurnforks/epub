@@ -18,17 +18,9 @@ use SimpleXMLElement;
 
 class OpfResource
 {
-    /**
-     * @var \SimpleXMLElement
-     */
-    protected $xml;
+    protected SimpleXMLElement $xml;
 
-    /**
-     * Array of XML namespaces found in document
-     *
-     * @var array
-     */
-    protected $namespaces;
+    protected array $namespaces;
 
     /**
      * Constructor
@@ -50,22 +42,12 @@ class OpfResource
         $this->namespaces = $this->xml->getNamespaces(true);
     }
 
-    public static function make(
-        $data,
-        ?ZipFileResource $resource = null,
-        ?Package $package = null
-    ) {
+    public static function make($data, ?ZipFileResource $resource = null, ?Package $package = null)
+    {
         return (new static($data, $resource))->bind($package);
     }
 
-    /**
-     * Processes the XML data and puts the data into a Package object
-     *
-     * @param Package $package
-     *
-     * @return Package
-     */
-    public function bind(?Package $package = null)
+    public function bind(?Package $package = null): Package
     {
         $package ??= new Package();
         $xml = $this->xml;

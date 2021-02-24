@@ -8,7 +8,7 @@ use Lurn\EPub\Exception\OutOfBoundsException;
 
 class Metadata extends Collection
 {
-    public function add(ItemInterface $item)
+    public function add($item)
     {
         if (! $item instanceof MetadataItem) {
             throw new InvalidArgumentException(

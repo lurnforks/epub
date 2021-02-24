@@ -24,10 +24,8 @@ class WriterTest extends TestCase
     {
         $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
-        $manifest   = $epub->getManifest();
-        $dedication = $manifest->get('dedication');
-        $expected   = $this->getFixtureContents('the-velveteen-rabbit/' . $dedication->href);
+        $expected = $this->getFixtureContents('the-velveteen-rabbit/' . $epub->manifest->dedication->href);
 
-        $this->assertEquals($expected, $dedication->getContent());
+        $this->assertEquals($expected, $epub->manifest->dedication->getContent());
     }
 }

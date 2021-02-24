@@ -2,27 +2,29 @@
 
 namespace Lurn\EPub\Definition;
 
-use Lurn\EPub\Definition\ManifestItem;
-
 abstract class Collection
 {
-    protected $items;
+    protected array $items;
 
     public function __construct()
     {
         $this->items = [];
     }
 
+    public function __get(string $property)
+    {
+        if ($this->has($property)) {
+            $value = $this->get($property);
+
+            return is_array($value) ? $value[0]->value : $value;
+        }
+
+        return null;
+    }
+
     public function add(ItemInterface $item)
     {
-        $id = $item->getIdentifier();
-
-        /* Not sure if an exception is really best here... maybe just don't overwrite data?
-        if (isset($this->items[$id])) {
-            throw new \RuntimeException(sprintf('Attempting to add a duplicate %s "%s"', get_class($item), $id));
-        } */
-
-        $this->items[$id] = $item;
+        $this->items[$item->getIdentifier()] = $item;
     }
 
     public function has($id)

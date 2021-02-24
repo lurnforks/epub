@@ -14,20 +14,21 @@ class OpfResourceTest extends TestCase
     {
         $fixture = $this->getFixtureContents('basic/OEPS/content.opf');
 
-        $opf = new OpfResource($fixture);
+        $package = OpfResource::make($fixture);
 
-        $package = $opf->bind();
+        $this->assertInstanceOf(Metadata::class, $package->metadata);
+        $this->assertInstanceOf(Manifest::class, $package->manifest);
 
-        $metadata = $package->getMetadata();
-        $this->assertTrue($metadata instanceof Metadata);
-        $this->assertTrue($metadata->has('title'));
-        $this->assertEquals('Epub Format Construction Guide', $metadata->getValue('title'));
+        $this->assertTrue($package->metadata->has('title'));
 
-        $manifest = $package->getManifest();
-        $this->assertTrue($manifest instanceof Manifest);
         $this->assertEquals(
-            ["ncx", "css", "logo", "title", "contents", "intro", "part1", "part2", "part3", "part4", "specs"],
-            $manifest->keys()
+            'Epub Format Construction Guide',
+            $package->metadata->title,
+        );
+
+        $this->assertEquals(
+            ['ncx', 'css', 'logo', 'title', 'contents', 'intro', 'part1', 'part2', 'part3', 'part4', 'specs'],
+            $package->manifest->keys(),
         );
     }
 }
