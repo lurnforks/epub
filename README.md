@@ -18,7 +18,7 @@ Add a VCS repository to your composer.json file:
 Then require the original package via composer:
 
 ```bash
-composer require justinrainbow/epub
+composer require justinrainbow/epub:^0.1.1
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ composer require justinrainbow/epub
 
 namespace Lurn\EPub\Reader;
 
-$epub = Reader::load('book.epub');
+$epub = Reader::make('book.epub');
 
 printf("Title: %s\n", $epub->metadata->title);
 ```
