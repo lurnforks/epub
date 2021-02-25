@@ -33,6 +33,19 @@ $epub = Reader::make('book.epub');
 printf("Title: %s\n", $epub->metadata->title);
 ```
 
+## Testing
+To run the test suite, ensure you've installed the project's dependencies with `composer install` and then run:
+
+```bash
+composer test
+```
+
+You can pass options to phpunit (for example, for filtering):
+
+```bash
+composer test -- --filter=ReaderTest
+```
+
 ## Resources
 
  * [Epub Format Construction Guide](http://www.hxa.name/articles/content/epub-guide_hxa7241_2007.html)
