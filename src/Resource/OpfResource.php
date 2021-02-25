@@ -20,7 +20,7 @@ class OpfResource
 {
     protected SimpleXMLElement $xml;
 
-    protected array $namespaces;
+    protected ?ZipFileResource $resource;
 
     /**
      * Constructor
@@ -38,8 +38,6 @@ class OpfResource
         $this->xml = is_string($data) ? new SimpleXMLElement($data) : $data;
 
         $this->resource = $resource;
-
-        $this->namespaces = $this->xml->getNamespaces(true);
     }
 
     public static function make($data, ?ZipFileResource $resource = null, ?Package $package = null)
@@ -50,19 +48,20 @@ class OpfResource
     public function bind(?Package $package = null): Package
     {
         $package ??= new Package();
-        $xml = $this->xml;
 
-        $package->version = (string) $xml['version'];
+        $package->version = (string) $this->xml['version'];
 
-        $this->processMetadataElement($xml->metadata, $package->metadata);
-        $this->processManifestElement($xml->manifest, $package->manifest);
-        $this->processSpineElement($xml->spine, $package->spine, $package->manifest, $package->navigation);
+        $this->processMetadataElement($this->xml->metadata, $package->metadata);
+        $this->processManifestElement($this->xml->manifest, $package->manifest);
+        $this->processSpineElement($this->xml->spine, $package);
 
-        if ($xml->guide) {
-            $this->processGuideElement($xml->guide, $package->guide);
+        if ($this->xml->guide) {
+            $this->processGuideElement($this->xml->guide, $package->guide);
         }
 
-        return $package;
+        return $package
+            ->setResource($this->resource)
+            ->setVersion($this->xml['version']);
     }
 
     protected function processMetadataElement(SimpleXMLElement $xml, Metadata $metadata)
@@ -80,13 +79,13 @@ class OpfResource
 
     protected function processManifestElement(SimpleXmlElement $xml, Manifest $manifest)
     {
-        foreach ($xml->item as $child) {
+        foreach ($xml->item as $attributes) {
             $item = new ManifestItem();
 
-            $item->id       = (string) $child['id'];
-            $item->href     = (string) $child['href'];
-            $item->type     = (string) $child['media-type'];
-            $item->fallback = (string) $child['fallback'];
+            $item->id = (string) $attributes['id'];
+            $item->href = (string) $attributes['href'];
+            $item->type = (string) $attributes['media-type'];
+            $item->fallback = (string) $attributes['fallback'];
 
             $this->addContentGetter($item);
 
@@ -94,51 +93,44 @@ class OpfResource
         }
     }
 
-    protected function processSpineElement(
-        SimpleXMLElement $xml,
-        Spine $spine,
-        Manifest $manifest,
-        Navigation $navigation
-    ) {
+    protected function processSpineElement(SimpleXMLElement $xml, Package $package)
+    {
         $position = 1;
-        foreach ($xml->itemref as $child) {
-            $id = (string) $child['idref'];
-            $manifestItem = $manifest->get($id);
 
-            if (! $linear = $child['linear']) {
-                $linear = 'yes';
-            }
+        foreach ($xml->itemref as $attributes) {
+            $id = (string) $attributes['idref'];
+            $manifestItem = $package->manifest->get($id);
 
             $item = new SpineItem();
 
-            $item->id     = $id;
-            $item->type   = $manifestItem->type;
-            $item->href   = $manifestItem->href;
-            $item->order  = $position;
-            $item->linear = $linear;
+            $item->id = $id;
+            $item->type = $manifestItem->type;
+            $item->href = $manifestItem->href;
+            $item->order = $position;
+            $item->linear = $attributes['linear'] ?: 'yes';
 
             $this->addContentGetter($item);
 
-            $spine->add($item);
+            $package->spine->add($item);
 
             $position++;
         }
 
         $ncxId = $xml['toc'] ? (string) $xml['toc'] : 'ncx';
 
-        if ($manifest->has($ncxId)) {
-            $navigation->src = $manifest->get($ncxId);
+        if ($package->manifest->has($ncxId)) {
+            $package->navigation->src = $package->manifest->get($ncxId);
         }
     }
 
     protected function processGuideElement(SimpleXMLElement $xml, Guide $guide)
     {
-        foreach ($xml->reference as $child) {
+        foreach ($xml->reference as $attributes) {
             $item = new GuideItem();
 
-            $item->title = (string) $child['title'];
-            $item->type  = (string) $child['type'];
-            $item->href  = (string) $child['href'];
+            $item->title = (string) $attributes['title'];
+            $item->type  = (string) $attributes['type'];
+            $item->href  = (string) $attributes['href'];
 
             $this->addContentGetter($item);
 
@@ -150,29 +142,23 @@ class OpfResource
      * Builds an array from XML attributes
      *
      * For instance:
-     *
-     *   <tag
-     *       xmlns:opf="http://www.idpf.org/2007/opf"
-     *       opf:file-as="Some Guy"
-     *       id="name"/>
+     *    <tag xmlns:opf="http://www.idpf.org/2007/opf" opf:file-as="Some Guy" id="name"/>
      *
      * Will become:
+     *    ['opf:file-as' => 'Some Guy', 'id' => 'name']
      *
-     *   array('opf:file-as' => 'Some Guy', 'id' => 'name')
+     * Note: Namespaced attributes will have the namespace prefix
+     * prepended to the attribute name
      *
-     * **NOTE**: Namespaced attributes will have the namespace prefix
-     *           prepended to the attribute name
-     *
-     * @param \SimpleXMLElement $xml The XML tag to grab attributes from
-     *
+     * @param \SimpleXMLElement $xml
      * @return array
      */
-    protected function getXmlAttributes($xml)
+    protected function getXmlAttributes($element)
     {
         $attributes = [];
 
-        foreach ($this->namespaces as $prefix => $namespace) {
-            foreach ($xml->attributes($namespace) as $attr => $value) {
+        foreach ($this->xml->getNamespaces(true) as $prefix => $namespace) {
+            foreach ($element->attributes($namespace) as $attr => $value) {
                 if ($prefix !== "") {
                     $attr = "{$prefix}:{$attr}";
                 }
@@ -187,7 +173,7 @@ class OpfResource
     protected function addContentGetter($item)
     {
         if (null !== $this->resource) {
-            $item->setContent(fn () => $this->resource->get($item->href));
+            $item->setContent(fn () => $this->resource->extract($item->href));
         }
     }
 }

@@ -11,13 +11,11 @@ class NcxResource
 {
     protected SimpleXMLElement $xml;
 
-    protected array $namespaces;
-
     /**
      * Constructor
      *
      * @param \SimpleXMLElement|string $data
-     * @throws InvalidArgumentException
+     * @throws \Lurn\EPub\Exception\InvalidArgumentException
      */
     public function __construct($data)
     {
@@ -26,8 +24,6 @@ class NcxResource
         }
 
         $this->xml = is_string($data) ? new SimpleXMLElement($data) : $data;
-
-        $this->namespaces = $this->xml->getNamespaces(true);
     }
 
     public static function make($data, ?Package $package = null)
@@ -39,9 +35,7 @@ class NcxResource
     {
         $package ??= new Package();
 
-        $navMap = $this->xml->navMap;
-
-        $this->consumeNavMap($navMap, $package->navigation->chapters);
+        $this->consumeNavMap($this->xml->navMap, $package->navigation->chapters);
 
         return $package;
     }
@@ -55,7 +49,11 @@ class NcxResource
 
     protected function consumeNavPoint($navPoint)
     {
-        $chapter = new Chapter((string) $navPoint->navLabel->text, $navPoint['playOrder'], (string) $navPoint->content['src']);
+        $chapter = new Chapter(
+            (string) $navPoint->navLabel->text,
+            $navPoint['playOrder'],
+            (string) $navPoint->content['src'],
+        );
 
         foreach ($navPoint->navPoint as $child) {
             $chapter->addChild($this->consumeNavPoint($child));

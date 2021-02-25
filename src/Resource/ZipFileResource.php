@@ -2,7 +2,8 @@
 
 namespace Lurn\EPub\Resource;
 
-use Illuminate\Support\Collection;
+use Lurn\EPub\Exception\FileNotFoundException;
+use SimpleXMLElement;
 use ZipArchive;
 
 class ZipFileResource
@@ -18,12 +19,13 @@ class ZipFileResource
         $this->archive->open($file);
     }
 
-    public function setDirectory($dir)
+    public function setDirectory(string $dir)
     {
         $this->currentDir = $dir;
+        return $this;
     }
 
-    public function get($name)
+    public function extract(string $name): string
     {
         if (null !== $this->currentDir) {
             $name = $this->currentDir . '/' . $name;
@@ -32,8 +34,8 @@ class ZipFileResource
         return $this->archive->getFromName($name);
     }
 
-    public function getXML($name)
+    public function extractXml(string $name): SimpleXMLElement
     {
-        return simplexml_load_string($this->get($name));
+        return simplexml_load_string($this->extract($name));
     }
 }

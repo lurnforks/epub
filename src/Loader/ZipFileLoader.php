@@ -9,34 +9,48 @@ use Lurn\EPub\Resource\ZipFileResource;
 
 class ZipFileLoader
 {
+    protected ZipFileResource $resource;
+
     public function load(string $file): Package
     {
-        $resource = new ZipFileResource($file);
+        $this->resource = new ZipFileResource($file);
 
-        $package = $resource->getXML('META-INF/container.xml');
+        $container = $this->resource->extractXml('META-INF/container.xml');
 
-        if (! $opfFile = (string) ($package->rootfiles->rootfile['full-path'] ?? '')) {
-            foreach ($package->getNamespaces() as $key => $value) {
-                $package->registerXPathNamespace($key, $value);
-                $items = $package->xpath("//{$key}:rootfile/@full-path");
-                $opfFile = (string) $items[0]['full-path'];
-            }
+        $opfFile = (string) ($container->rootfiles->rootfile['full-path'] ?? $this->findOpfFromNamespaces($container));
+
+        return $this->getPackageFromOpf($opfFile);
+    }
+
+    protected function findOpfFromNamespaces($package)
+    {
+        $opf = '';
+
+        foreach ($package->getNamespaces() as $key => $value) {
+            $package->registerXPathNamespace($key, $value);
+            $items = $package->xpath("//{$key}:rootfile/@full-path");
+            $opf = (string) $items[0]['full-path'];
         }
 
-        $data = $resource->get($opfFile);
+        return $opf;
+    }
+
+    protected function getPackageFromOpf($opf): Package
+    {
+        $data = $this->resource->extract($opf);
 
         // All files referenced in the OPF are relative to it's directory.
-        if ('.' !== $dir = dirname($opfFile)) {
-            $resource->setDirectory($dir);
+        if ('.' !== $dir = dirname($opf)) {
+            $this->resource->setDirectory($dir);
         }
 
-        $package = OpfResource::make($data, $resource);
+        $package = OpfResource::make($data, $this->resource);
 
-        $package->opfDirectory = dirname($opfFile);
+        $package->opfDirectory = dirname($opf);
 
         if ($package->navigation->src->href) {
             $package = NcxResource::make(
-                $resource->get($package->navigation->src->href),
+                $this->resource->extract($package->navigation->src->href),
                 $package,
             );
         }

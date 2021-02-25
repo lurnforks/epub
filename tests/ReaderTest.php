@@ -9,15 +9,15 @@ use Lurn\EPub\Tests\TestCase;
 class ReaderTest extends TestCase
 {
     /** @test */
-    public function readingEpubFile()
+    public function aValidEpubFileIsReadable()
     {
-        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
+        $epub = Reader::make($this->fixturePath('test.epub'));
 
         $this->assertInstanceOf(Package::class, $epub);
     }
 
     /** @test */
-    public function readingManifestItemContent()
+    public function manifestItemsHaveTheCorrectContent()
     {
         $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
@@ -27,7 +27,7 @@ class ReaderTest extends TestCase
     }
 
     /** @test */
-    public function readingEpubVersion()
+    public function theEpubVersionIsSetCorrectly()
     {
         $epub = Reader::make($this->fixturePath('epub3_nested_nav.epub'));
         $this->assertEquals('3.0', $epub->version);
@@ -37,7 +37,7 @@ class ReaderTest extends TestCase
     }
 
     /** @test */
-    public function readingOpfDirectory()
+    public function theOpfCanBeReadCorrectly()
     {
         $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
         $this->assertEquals('.', $epub->opfDirectory);
@@ -47,7 +47,7 @@ class ReaderTest extends TestCase
     }
 
     /** @test */
-    public function loadingNamespacedContainer()
+    public function namespacedContainersLoadCorrectly()
     {
         $epub = Reader::make($this->fixturePath('pg19132.epub'));
 

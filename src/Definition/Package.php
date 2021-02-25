@@ -2,55 +2,44 @@
 
 namespace Lurn\EPub\Definition;
 
-use Lurn\EPub\Definition\ManifestItem;
+use Lurn\EPub\Resource\ZipFileResource;
 
 class Package
 {
-    public $version;
+    public string $version = '';
 
-    public $opfDirectory;
+    public string $opfDirectory = '';
 
-    public $metadata;
+    public Metadata $metadata;
 
-    public $manifest;
+    public Manifest $manifest;
 
-    public $spine;
+    public Spine $spine;
 
-    public $guide;
+    public Guide $guide;
 
-    public $navigation;
+    public Navigation $navigation;
+
+    public ?ZipFileResource $resource;
 
     public function __construct()
     {
-        $this->manifest   = new Manifest();
-        $this->metadata   = new Metadata();
-        $this->spine      = new Spine();
-        $this->guide      = new Guide();
+        $this->manifest = new Manifest();
+        $this->metadata = new Metadata();
+        $this->spine = new Spine();
+        $this->guide = new Guide();
         $this->navigation = new Navigation();
     }
 
-    public function getMetadata()
+    public function setResource($resource): self
     {
-        return $this->metadata;
+        $this->resource = $resource;
+        return $this;
     }
 
-    public function getManifest()
+    public function setVersion(string $version): self
     {
-        return $this->manifest;
-    }
-
-    public function getSpine()
-    {
-        return $this->spine;
-    }
-
-    public function getGuide()
-    {
-        return $this->guide;
-    }
-
-    public function getNavigation()
-    {
-        return $this->navigation;
+        $this->version = $version;
+        return $this;
     }
 }
