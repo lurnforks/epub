@@ -11,7 +11,7 @@ class ReaderTest extends TestCase
     /** @test */
     public function aValidEpubFileIsReadable()
     {
-        $epub = Reader::make($this->fixturePath('test.epub'));
+        $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 
         $this->assertInstanceOf(Package::class, $epub);
     }
