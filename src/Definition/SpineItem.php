@@ -28,12 +28,6 @@ class SpineItem implements ItemInterface
 
     public function getContent()
     {
-        // if (is_callable($this->content)) {
-        //     $func = $this->content;
-
-        //     $this->content = $func();
-        // }
-
         return value($this->content);
     }
 }
