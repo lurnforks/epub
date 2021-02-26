@@ -31,7 +31,7 @@ class OpfResource
      */
     public function __construct($data, ZipFileResource $resource = null)
     {
-        if (! is_string($data) && ! $data instanceof SimpleEXMLElement) {
+        if (! is_string($data) && ! $data instanceof SimpleXMLElement) {
             throw new InvalidArgumentException('Invalid data type for OpfResource');
         }
 
@@ -154,7 +154,7 @@ class OpfResource
 
         foreach ($this->xml->getNamespaces(true) as $prefix => $namespace) {
             foreach ($element->attributes($namespace) as $attr => $value) {
-                if ($prefix !== "") {
+                if ($prefix !== '') {
                     $attr = "{$prefix}:{$attr}";
                 }
 

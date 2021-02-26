@@ -8,7 +8,7 @@ abstract class TestCase extends TestCaseCase
 {
     public function fixturePath(string $name): string
     {
-        return __DIR__ . '/fixtures/' . $name;
+        return __DIR__ . '/.fixtures/' . $name;
     }
 
     public function getFixtureContents(string $name): string

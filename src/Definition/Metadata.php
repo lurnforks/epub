@@ -12,27 +12,15 @@ class Metadata extends Collection
     {
         if (! $item instanceof MetadataItem) {
             throw new InvalidArgumentException(
-                'Expected instance of ' . MetadataItem::class . ', got ' . get_class($item)
+                'Expected instance of '
+                    . MetadataItem::class
+                    . ', got '
+                    . (is_object($item) ? get_class($item) : $item)
             );
         }
 
         $id = $item->getIdentifier();
 
-        $this->items[$id] ??= [];
-
-        $this->items[$id][] = $item;
-    }
-
-    public function getValue($id)
-    {
-        $item = $this->get($id);
-
-        if (! isset($item[0]) || ! $item[0] instanceof MetadataItem) {
-            throw new OutOfBoundsException(
-                'No value could be found for item: ' . json_encode($id)
-            );
-        }
-
-        return $item[0]->value;
+        return $this->put($id, is_array($this->get($id)) ? [...$this->get($id), $item] : [$item]);
     }
 }

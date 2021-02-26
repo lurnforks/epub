@@ -2,41 +2,34 @@
 
 namespace Lurn\EPub\Definition;
 
+use Illuminate\Support\Str;
+use Lurn\EPub\Definition\Collection;
 use Lurn\EPub\Definition\ManifestItem;
-use Lurn\EPub\Definition\Metadata;
-use Lurn\EPub\Exception\DuplicateItemException;
 use Lurn\EPub\Exception\InvalidArgumentException;
 
 class Manifest extends Collection
 {
-    /**
-     * @var array
-     */
-    protected $resources = [];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function add(ItemInterface $item)
+    public function add($item)
     {
-        if (! ($item instanceof ManifestItem)) {
-            throw new InvalidArgumentException(sprintf(
-                'Expected instance of Lurn\EPub\Definition\ManifestItem, got %s',
-                get_class($item)
-            ));
-        }
-
-        $id = $item->getIdentifier();
-
-        $href = $item->href;
-
-        if (isset($this->resources[$href])) {
-            throw new DuplicateItemException(
-                'A single resource (href) must not be listed in the manifest more than once'
+        if (! $item instanceof ManifestItem) {
+            throw new InvalidArgumentException(
+                'Expected instance of '
+                    . ManifestItem::class
+                    . ', got '
+                    . (is_object($item) ? get_class($item) : $item)
             );
         }
 
-        $this->resources[$href] = $item;
-        $this->items[$id]       = $item;
+        return $this->put($item->getIdentifier(), $item);
+    }
+
+    public function images()
+    {
+        return $this->filter(fn ($item) => Str::startsWith($item->type, 'image/'));
+    }
+
+    public function documents()
+    {
+        return $this->filter(fn ($item) => in_array($item->type, ['text/html', 'text/xml', 'application/xhtml+xml']));
     }
 }

@@ -21,7 +21,7 @@ class NcxResource
      */
     public function __construct($data)
     {
-        if (! is_string($data) && ! $data instanceof SimpleEXMLElement) {
+        if (! is_string($data) && ! $data instanceof SimpleXMLElement) {
             throw new InvalidArgumentException('Invalid data type for OpfResource');
         }
 

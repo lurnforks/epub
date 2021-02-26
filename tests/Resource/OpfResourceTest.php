@@ -28,7 +28,7 @@ class OpfResourceTest extends TestCase
 
         $this->assertEquals(
             ['ncx', 'css', 'logo', 'title', 'contents', 'intro', 'part1', 'part2', 'part3', 'part4', 'specs'],
-            $package->manifest->keys(),
+            array_keys($package->manifest->all()),
         );
     }
 }

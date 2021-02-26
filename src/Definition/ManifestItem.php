@@ -15,8 +15,6 @@ class ManifestItem implements ItemInterface
 
     public string $fallback = '';
 
-    public bool $isImage = false;
-
     protected $content;
 
     public static function fromXmlAttributes($attributes)
@@ -27,7 +25,6 @@ class ManifestItem implements ItemInterface
         $item->href = (string) $attributes['href'];
         $item->type = (string) $attributes['media-type'];
         $item->fallback = (string) $attributes['fallback'];
-        $item->isImage = Str::startsWith($attributes['media-type'], 'image/');
 
         return $item;
     }
