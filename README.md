@@ -18,7 +18,7 @@ Add a VCS repository to your composer.json file:
 Then require the original package via composer:
 
 ```bash
-composer require justinrainbow/epub:^0.1.1
+composer require justinrainbow/epub:^0.2.0
 ```
 
 ## Usage
