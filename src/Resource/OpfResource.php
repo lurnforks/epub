@@ -80,16 +80,11 @@ class OpfResource
     protected function processManifestElement(SimpleXmlElement $xml, Manifest $manifest)
     {
         foreach ($xml->item as $attributes) {
-            $item = new ManifestItem();
-
-            $item->id = (string) $attributes['id'];
-            $item->href = (string) $attributes['href'];
-            $item->type = (string) $attributes['media-type'];
-            $item->fallback = (string) $attributes['fallback'];
-
-            $this->addContentGetter($item);
+            $item = ManifestItem::fromXmlAttributes($attributes);
 
             $manifest->add($item);
+
+            $this->addContentGetter($item);
         }
     }
 

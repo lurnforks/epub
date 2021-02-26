@@ -2,26 +2,32 @@
 
 namespace Lurn\EPub\Definition;
 
-class Chapter
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Spatie\DataTransferObject\DataTransferObject;
+
+class Chapter extends DataTransferObject
 {
-    public $title;
+    public ?string $title;
 
-    public $src;
+    public ?string $src;
 
-    public $position;
+    public ?int $position;
 
-    public $children;
+    public bool $isSubsection = false;
 
-    public function __construct($title, $pos, $src = null)
+    public ?Collection $children;
+
+    public static function fromNavPoint($navPoint)
     {
-        $this->title = str_replace(["\n", "\r"], ' ', $title);
-        $this->src = $src;
-        $this->position = (int) $pos;
-        $this->children = [];
-    }
+        $chapter = new static();
 
-    public function addChild(Chapter $child)
-    {
-        $this->children[] = $child;
+        $chapter->title = str_replace(["\n", "\r"], ' ', $navPoint->navLabel->text);
+        $chapter->src = $navPoint->content['src'];
+        $chapter->position = (int) $navPoint->playOrder;
+        $chapter->children = Collection::make();
+        $chapter->isSubsection = Str::contains($navPoint->content['src'], '#');
+
+        return $chapter;
     }
 }

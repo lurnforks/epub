@@ -2,6 +2,8 @@
 
 namespace Lurn\EPub\Resource;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Lurn\EPub\Definition\Chapter;
 use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Exception\InvalidArgumentException;
@@ -40,23 +42,19 @@ class NcxResource
         return $package;
     }
 
-    protected function consumeNavMap($navMap, &$chapters)
+    protected function consumeNavMap($navMap, Collection $chapters)
     {
         foreach ($navMap->navPoint as $navPoint) {
-            $chapters[] = $this->consumeNavPoint($navPoint);
+            $chapters->add($this->consumeNavPoint($navPoint));
         }
     }
 
     protected function consumeNavPoint($navPoint)
     {
-        $chapter = new Chapter(
-            (string) $navPoint->navLabel->text,
-            $navPoint['playOrder'],
-            (string) $navPoint->content['src'],
-        );
+        $chapter = Chapter::fromNavPoint($navPoint);
 
         foreach ($navPoint->navPoint as $child) {
-            $chapter->addChild($this->consumeNavPoint($child));
+            $chapter->children->add($this->consumeNavPoint($child));
         }
 
         return $chapter;

@@ -2,19 +2,35 @@
 
 namespace Lurn\EPub\Definition;
 
+use Illuminate\Support\Str;
 use Lurn\EPub\Definition\ItemInterface;
 
 class ManifestItem implements ItemInterface
 {
-    public $id;
+    public string $id = '';
 
-    public $href;
+    public string $href = '';
 
-    public $type;
+    public string $type = '';
 
-    public $fallback;
+    public string $fallback = '';
+
+    public bool $isImage = false;
 
     protected $content;
+
+    public static function fromXmlAttributes($attributes)
+    {
+        $item = new static();
+
+        $item->id = (string) $attributes['id'];
+        $item->href = (string) $attributes['href'];
+        $item->type = (string) $attributes['media-type'];
+        $item->fallback = (string) $attributes['fallback'];
+        $item->isImage = Str::startsWith($attributes['media-type'], 'image/');
+
+        return $item;
+    }
 
     public function getIdentifier()
     {
@@ -28,12 +44,12 @@ class ManifestItem implements ItemInterface
 
     public function getContent()
     {
-        if (is_callable($this->content)) {
-            $func = $this->content;
+        // if (is_callable($this->content)) {
+        //     $func = $this->content;
 
-            $this->content = $func();
-        }
+        //     $this->content = $func();
+        // }
 
-        return $this->content;
+        return value($this->content);
     }
 }

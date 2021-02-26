@@ -17,12 +17,12 @@ class ZipFileLoader
 
         $container = $this->resource->extractXml('META-INF/container.xml');
 
-        $opfFile = (string) ($container->rootfiles->rootfile['full-path'] ?? $this->findOpfFromNamespaces($container));
+        $opfFile = (string) ($container->rootfiles->rootfile['full-path'] ?? $this->getOpfFromNamespaces($container));
 
         return $this->getPackageFromOpf($opfFile);
     }
 
-    protected function findOpfFromNamespaces($package)
+    protected function getOpfFromNamespaces($package)
     {
         $opf = '';
 
