@@ -4,7 +4,6 @@ namespace Lurn\EPub\Definition;
 
 use Lurn\EPub\Definition\MetadataItem;
 use Lurn\EPub\Exception\InvalidArgumentException;
-use Lurn\EPub\Exception\OutOfBoundsException;
 
 class Metadata extends Collection
 {
