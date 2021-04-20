@@ -4,12 +4,11 @@ namespace Lurn\EPub\Tests;
 
 use Lurn\EPub\Definition\Package;
 use Lurn\EPub\Reader;
-use Lurn\EPub\Tests\TestCase;
 
 class ReaderTest extends TestCase
 {
     /** @test */
-    public function aValidEpubFileIsReadable()
+    public function epubFileIsReadable()
     {
         $epub = Reader::make($this->fixturePath('the_velveteen_rabbit.epub'));
 

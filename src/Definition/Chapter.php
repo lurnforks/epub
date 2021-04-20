@@ -24,7 +24,7 @@ class Chapter extends DataTransferObject
 
         $chapter->title = str_replace(["\n", "\r"], ' ', $navPoint->navLabel->text);
         $chapter->src = $navPoint->content['src'];
-        $chapter->position = (int) $navPoint['playOrder'];
+        $chapter->position = (string) $navPoint['playOrder'];
         $chapter->children = Collection::make();
         $chapter->isSubsection = Str::contains($navPoint->content['src'], '#');
 
