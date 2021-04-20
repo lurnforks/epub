@@ -12,9 +12,9 @@ class Chapter extends DataTransferObject
 
     public ?string $src;
 
-    public int $position = 0;
+    public ?string $href;
 
-    public bool $isSubsection = false;
+    public int $position = 0;
 
     public ?Collection $children;
 
@@ -23,10 +23,10 @@ class Chapter extends DataTransferObject
         $chapter = new static();
 
         $chapter->title = str_replace(["\n", "\r"], ' ', $navPoint->navLabel->text);
+        $chapter->href = Str::before($navPoint->content['src'], '#');
         $chapter->src = $navPoint->content['src'];
         $chapter->position = (string) $navPoint['playOrder'];
         $chapter->children = Collection::make();
-        $chapter->isSubsection = Str::contains($navPoint->content['src'], '#');
 
         return $chapter;
     }
